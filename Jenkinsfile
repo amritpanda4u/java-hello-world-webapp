@@ -1,5 +1,5 @@
 pipeline{
-    agent {label "java-build-node"}
+    agent any
     
     tools {
         maven 'Maven-3.8'
@@ -13,6 +13,11 @@ pipeline{
         stage('build'){
             steps{
                sh 'mvn clean install'
+            }
+        }
+        stage('deploy to TC'){
+            steps{
+              deploy adapters: [tomcat9(credentialsId: 'TomcatServer', path: '', url: 'http://20.12.217.39:8080')], contextPath: null, war: '**/*.war'
             }
         }
     }
